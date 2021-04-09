@@ -1,0 +1,3487 @@
+FORMAT: 1A
+HOST: https://pagadoria.devzemo.com
+
+# PAGADORIA
+Seja bem-vindo à documentação do Pagadoria da ZemoPay.
+
+O Pagadoria é um produto que realiza emissões de boleto para pessoas físicas e jurídicas. O objetivo do Pagadoria é inovar e alavancar em soluções práticas e ágeis de pagamento e emissões de boleto. 
+
+Com o Pagadoria é possível criar taxas para os boletos de seus clientes, cadastrar os bancos que deseja receber os pagamentos, realizar o cadastro de diversos clientes, além de possuir a criação de boletos com split, sem split e  tipos de taxas que se adequam ao seu negócio.
+
+Link da API de produção: https://pagadoria.zemopay.com.br
+
+Link da API de homologação: https://pagadoria.devzemo.com
+
+## Group Autenticação
+Para realizar suas primeiras experiências com o Pagadoria, é necessário realizar a autenticação. A autenticação é realizada pelo CNPJ e senha, e assim é gerado o token de autorização para realizar suas operações.
+
+## Autorização [/api/auth]
+Endpoint para gerar o token de autenticação para acessar a API.
+### Autorização [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    
+    - Body
+      {
+        "cnpj": "70163939000152",
+        "password": "123"
+      }
+
++ Parameters
+  + cnpj - CNPJ do ERP.
+  + password - Senha do ERP.
+
+- Response 200
+
+  - Body
+    {
+      "token": "eyJhbGciOiJIUI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiY25waiI6IjI4MTAxNjEyMDAwMTkwIiwiaWF0IjoxNjE1OTA1NzYxLCJleHAiOjE2MTU5OTIxNjF9.Wv1hzMrxCF6ITd1awEv5oXSjuB3hUgthWZkm1QznLgU",
+      "type": "Bearer",
+      "expiresIn": 1440
+    }
+
+- Response 200
+
+  - Body
+    {
+      "error": "Credential invalid"
+    }
+
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: password"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "cnpj"
+    }
+
+## Group Taxas da Empresa
+Após, será necessário criar taxa para cadastrar um cliente. Com essas rotas é possível criar, atualizar e listar todas as taxas criadas. Uma mesma taxa pode ser utilizada em vários cliente, ou uma taxa para cada cliente.
+
+## Criar taxas [/api/consumerscompaniesfees/create]
+Criação de taxas, a lista de taxas é feita com ID. A mesma taxa pode ser usada em várias empresas.
+### Criar taxas [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 2
+    }
+
++ Parameters
+  + value: '2' (decimal) - Valor da taxa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 20,
+      "value": "2.00",
+      "company_id": 1,
+      "updatedAt": "2021-03-16T16:33:55.258Z",
+      "createdAt": "2021-03-16T16:33:55.258Z"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: value"
+    }
+
+## Criar taxas [/api/consumerscompaniesfees/create]
+Criação de taxas, a lista de taxas é feita com ID. A mesma taxa pode ser usada em várias empresas.
+### Criar taxas [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 2
+    }
+
++ Parameters
+  + value: '2' (decimal) - Valor da taxa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 20,
+      "value": "2.00",
+      "company_id": 1,
+      "billet_ted_fee": 1,
+      "billet_fee": 1,
+      "billet_sum_fees": 2,
+      "updatedAt": "2021-03-16T16:33:55.258Z",
+      "createdAt": "2021-03-16T16:33:55.258Z"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: value"
+    }
+
+## Listar taxas [/api/consumerscompaniesfees/get{?limit}{?page}{?pagination}{?cpf_cnpj}]
+Endpoint para listar as taxas criadas.
+### Listar taxas [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de taxas retornadas no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação.
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `08744817000186` (optional) - CPF ou CNPJ a ser procurado.
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: cpf_cnpj      
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 20,
+          "value": "2.00",
+          "updatedAt": "2021-03-16T16:33:55.258Z",
+          "createdAt": "2021-03-16T16:33:55.258Z",
+          "company_id": 1,
+          "consumers_companies": [
+            {
+              "id": 13,
+              "cpf_cnpj": "90253394848",
+              "type_person": "F",
+              "name": "Renata Tatiane Nascimento",
+              "contact_name": "Renata",
+              "createdAt": "2021-03-16T16:59:15.874Z",
+              "updatedAt": "2021-03-16T16:59:15.874Z",
+              "phone_id": 1,
+              "company_id": 1,
+              "consumer_company_fee_id": 20,
+            }
+          ]
+        }
+      ],
+      "count": 1,
+      "current_page": 1,
+      "totalPages": 1
+    }
+
+## Atualizar Taxas [/api/consumerscompaniesfees/update/{id}]
+Endpoint para atualizar a taxa pelo id.
+### Atualizar Taxas [PUT]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 3
+    }
+
++ Parameters
+  + value: '100' (decimal) - Valor da taxa.
+  + id: 1 (integer) - Id da taxa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 20,
+      "value":  "3.00",
+      "createdAt": "2021-03-16T16:33:55.258Z",
+      "updatedAt": "2021-03-16T16:48:18.150Z",
+      "company_id": 1
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "id,company_id"
+    }
+
+
+## Group Empresas
+Aqui é necessário registrar o sacador avalista. Primeiro, o registro telefônico deve ser realizado e, assim, é possível registrar o sacador avalista. Com essas rotas é possível criar, atualizar e listar o sacador avalista.
+
+## Criar telefone de empresas [/api/phone/create]
+Endpoint para criar telefone. Esta informação é usada para criar uma empresa, vários consumidores podem ter o mesmo telefone.
+### Criar telefone de empresas [POST]
+
+- Request (application/json)
+
+   + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "country_code": "55",
+      "area": "16",
+      "number": "988407888"
+    }
+
++ Parameters   
+  + country_code: '55' - Código telefônico do país.
+  + area: '47' - Código telefônico do estado.
+  + number: '988407888' - Número de telefone.
+  
+
+- Response 200 
+  - Body 
+    {
+      "id": 22,
+      "country_code": "55",
+      "area": "16",
+      "number": "988407587",
+      "updatedAt": "2021-03-16T18:32:08.725Z",
+      "createdAt": "2021-03-16T18:32:08.725Z"
+    }
+
+- Response 400 
+  - Body 
+    {
+      "name": "Missing param",
+      "message": "Missing param: country_code"
+    }
+
+- Response 400 
+  - Body 
+    {
+      "name": "Missing param",
+      "message": "Missing param: area"
+    }
+
+- Response 400 
+  - Body 
+    {
+      "name": "Missing param",
+      "message": "Missing param: number"
+    }
+
+## Listar telefones [/api/phone/get]
+Endpoint que lista as empresas criadas pelo ERP.
+### Listar telefones [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de telefones retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação.
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `90253394848` (optional) - CPF ou CNPJ a ser procurado
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: cpf_cnpj 
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+- Response 200
+
+  - Body
+    [
+      {
+        "id": 1,
+        "country_code": "55",
+        "area": "11",
+        "number": "988407587",
+        "createdAt": "2020-12-23T00:27:56.666Z",
+        "updatedAt": "2020-12-23T00:27:56.666Z",
+        "consumer_company": [
+          {
+            "id": 13,
+            "cpf_cnpj": "90253394848",
+            "type_person": "F",
+            "name": "Renata Tatiane Nascimento",
+            "contact_name": "Renata",
+            "createdAt": "2021-03-16T16:59:15.874Z",
+            "updatedAt": "2021-03-16T17:17:02.376Z",
+            "phone_id": 1,
+            "company_id": 1,
+            "consumer_company_fee_id": 20
+          }
+        ]
+      }
+    ]
+
+
+## Criar Empresa [/api/consumerscompanies/create]
+Endpoint para criar empresas. A empresa criada tem uma taxa conforme o acordo feito.
+### Criar Empresa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    { 
+      "cpf_cnpj": "90253394848", 
+      "type_person": "F", 
+      "name": "Renata Tatiane Nascimento", 
+      "contact_name": "Renata", 
+      "phone_id": 1,
+      "consumer_company_fee_id": 20
+    }
+
++ Parameters
+  + cpf_cnpj - CPF ou CNPJ.
+  + type_person - Tipo de pessoa.
+      + F - Pessoa física.
+      + J - Pessoa jurídica.
+  + name - Nome da empresa.
+  + contact_name - Nome para contato.
+  + phone_id (integer) - Id do telefone registrado.
+  + consumer_company_fee_id (integer) - Id da taxa registrada.
+
+- Response 200
+
+  - Body
+    {
+      "id": 13,
+      "cpf_cnpj": "90253394848",
+      "type_person": "F",
+      "name": "Renata Tatiane Nascimento",
+      "contact_name": "Renata",
+      "phone_id": 1,
+      "company_id": 1,
+      "consumer_company_fee_id": 20,
+      "updatedAt": "2021-03-16T16:59:15.874Z",
+      "createdAt": "2021-03-16T16:59:15.874Z"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Already created with param: cpf_cnpj,company_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cpf_cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: consumer_company_fee_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: phone_id"
+    }
+
+- Response 400
+
+  - Body    
+    {
+      "name": "Missing param",
+      "message": "Missing param: contact_name"
+    }
+
+- Response 400
+
+  - Body    
+    {
+      "name": "Missing param",
+      "message": "Missing param: name"
+    }
+
+- Response 400
+
+  - Body    
+    {
+      "name": "Missing param",
+      "message": "Missing param: type_person"
+    }
+
+- Response 400
+
+  - Body    
+    {
+      "name": "Missing param",
+      "message": "Missing param: cpf_cnpj"
+    }
+
+
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "phone_id,"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_fee_id, company_id"
+    }
+
+## Lista de Empresas [/api/consumerscompanies/get{?limit}{?page}{?pagination}{?cpf_cnpj}]
+Endpoint que lista as empresas criadas pelo ERP.
+### Lista de Empresas [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de empresas retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação.
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `90253394848` (optional) - CPF ou CNPJ a ser procurado
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: cpf_cnpj 
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 13,
+          "cpf_cnpj": "90253394848",
+          "type_person": "F",
+          "name": "Renata Tatiane Nascimento",
+          "contact_name": "Renata",
+          "createdAt": "2021-03-16T16:59:15.874Z",
+          "updatedAt": "2021-03-16T16:59:15.874Z",
+          "phone_id": 1,
+          "company_id": 1,
+          "consumer_company_fee_id": 20,
+          "phone": {
+            "id": 1,
+            "country_code": "55",
+            "area": "11",
+            "number": "988407587",
+            "createdAt": "2020-12-23T00:27:56.666Z",
+            "updatedAt": "2020-12-23T00:27:56.666Z"
+          },
+          "consumer_company_fee": {
+            "id": 20,
+            "value": "2.00",
+            "createdAt": "2021-03-16T16:33:55.258Z",
+            "updatedAt": "2021-03-16T16:33:55.258Z",
+            "company_id": 1
+          }
+        }
+      ],
+      "count": 1,
+      "current_page": 1,
+      "totalPages": 1
+    }
+
+## Atualizar Empresa [/api/consumerscompanies/update/{id}]
+Endpoint que atualiza todas as informações da empresa pelo ID.
+### Atualizar Empresa [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "cpf_cnpj": "90253394848",
+      "type_person": "F",
+      "name": "Renata Tatiane Nascimento",
+      "contact_name": "Renata", 
+      "phone_id": 1,
+      "consumer_company_fee_id": 20
+    }
+
++ Parameters
+  + cpf_cnpj - CPF ou CNPJ.
+  + type_person - Tipo de pessoa.
+      + F - Pessoa física.
+      + J - Pessoa jurídica.
+  + name - Nome da empresa.
+  + contact_name - Nome de contato.
+  + phone_id (integer) - Id do telefone registrado.
+  + consumer_company_fee_id (integer) - Id da taxa registrada.
+  + id: 1 (integer) - Id da empresa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 13,
+      "cpf_cnpj": "90253394848",
+      "type_person": "F",
+      "name": "Renata Tatiane Nascimento",
+      "contact_name": "Renata",
+      "createdAt": "2021-03-16T16:59:15.874Z",
+      "updatedAt": "2021-03-16T17:14:53.209Z",
+      "phone_id": 1,
+      "company_id": 1,
+      "consumer_company_fee_id": 20
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cpf_cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "id,company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found ",
+      "message": "phone_id,"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_fee_id,company_id"
+    }
+
+
+##Group Conta Bancária
+Com isso, será necessário cadastrar o banco do sacador avalista e beneficiários, ele pode ser tanto um banco externo, quanto a própria ZemoPay. Caso deseje receber por outros bancos você pode utilizar o “Criar Banco - Liquidação Externa”, para receber com a ZemoPay você pode utilizar o “Criar Banco - Liquidação Interna”. Com essas rotas é possível criar, atualizar, listar e excluir todos os bancos criados.
+
+## Criar Conta Bancária [/api/banks/create]
+Conta bancária para receber valores de pagamento. Essa conta será vinculada a uma "empresa".
+### Liquidação Externa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "bank": "237",
+      "agency": "3391",
+      "account": "7684",
+      "digit": "8",
+      "type": "CC",
+      "consumer_company_id": 4
+    }
+
++ Parameters
+  + bank - Número do banco.
+  + agency - Número da agência.
+  + account - Número da conta.
+  + digit - Dígito da conta.
+  + type - Tipo da conta.
+      + CC - Current Account.
+      + CP - Conta poupança.
+  + consumer_company_id (integer) - Id da empresa.
+
+- Response 200
+  
+  - Body
+    {
+      "id": 20,
+      "bank": "237",
+      "agency": "3391",
+      "account": "7684",
+      "digit": "8",
+      "type": "CC",
+      "pj_user_id": null,
+      "consumer_company_id": 7,
+      "updatedAt": "2020-07-13T19:55:39.074Z",
+      "createdAt": "2020-07-13T19:55:39.074Z"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Already created with param: consumer_company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_id,company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "cnpj"
+    }
+
+## Criar Conta Bancária [/api/banks/create]
+### Liquidação interna [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "cnpj": "28101612000190",
+      "consumer_company_id": 8
+    }
+
++ Parameters
+  + cnpj - CNPJ do banco da empresa para receber transferência interna.
+  + consumer_company_id (integer) - Id da empresa.
+
+- Response 200
+  - Body
+    {
+      "id": 21,
+      "pj_user_id": 5968,
+      "consumer_company_id": 8,
+      "updatedAt": "2020-07-13T19:57:22.448Z",
+      "createdAt": "2020-07-13T19:57:22.448Z",
+      "bank": null,
+      "agency": null,
+      "account": null,
+      "digit": null,
+      "type": null
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Already created with param: consumer_company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_id,cpf_cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_id,company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "cnpj"
+    }
+
+## Listar Contas Bancárias [/api/banks/get{?limit}{?page}{?pagination}{?cpf_cnpj}]
+Endpoint para listar todos os bancos criados.
+### Listar Contas Bancárias [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de bancos retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação. (Este parâmetro será depreciado futuramente!)
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `83861906000128` (optional) - CPF ou CNPJ a ser procurado.
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: cpf_cnpj 
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 1,
+          "bank": "237",
+          "agency": "1",
+          "account": "232323",
+          "digit": "1",
+          "type": "CC",
+          "pj_user_id": null,
+          "createdAt": "2020-12-23T00:30:09.556Z",
+          "updatedAt": "2021-01-28T12:35:02.885Z",
+          "consumer_company_id": 1,
+          "consumer_company": {
+            "id": 1,
+            "cpf_cnpj": "83861906000128",
+            "type_person": "J",
+            "name": "Escola ZYX",
+            "contact_name": "Escola ZYX",
+            "createdAt": "2020-12-23T00:28:44.950Z",
+            "updatedAt": "2021-01-28T12:35:02.860Z",
+            "phone_id": 20,
+            "company_id": 1,
+            "consumer_company_fee_id": 1
+          }
+        }
+      ],
+      "count": 1,
+      "current_page": 1,
+      "totalPages": 1
+    }
+
+## Atualizar Conta Bancária [/api/banks/update/{id}]
+Endpoint para atualizar todas as informações de um banco pelo ID.
+### Atualizar Banco [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "bank": "237",
+      "agency": "3391",
+      "account": "7685",
+      "digit": "8",
+      "type": "CC"
+    }
+
++ Parameters
+  + bank (optional) - Número do banco.
+  + agency (optional) - Número da agência.
+  + account (optional) - Número da conta.
+  + digit (optional) - Dígito da conta.
+  + type (optional) - Tipo da conta.
+      + CC - Conta corrente.
+      + CP - Conta poupança.
+  + cnpj (optional) - CNPJ do banco da empresa para receber transferência interna.
+  + id: 1 (integer) - ID do banco a ser atualizado.
+
+- Response 200
+
+  - Body
+    {
+      "id": 5,
+      "bank": "237",
+      "agency": "3391",
+      "account": "7685",
+      "digit": "8",
+      "type": "CC",
+      "pj_user_id": 7558,
+      "createdAt": "2020-12-23T06:36:32.558Z",
+      "updatedAt": "2021-03-16T14:59:41.997Z",
+      "consumer_company_id": 7
+    }
+
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_id,cpf_cnpj"
+    }
+    
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "cnpj"
+    }
+
+# Group Administradores
+Você também pode utilizar um administrador para realizar suas operações, o administrador é quem recebe uma parte do valor da taxa do sacador avalista (Empresa vinculada ao administrador). Para que o administrador seja ativado, é necessário criar uma taxa. Não é necessário haver um administrador para realizar a geração do boleto.
+
+## Criar Administrador [/api/managers/create]
+Endpoint para criar administrador.
+### Criar Administrador [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995
+    }
+
++ Parameters
+  + cnpj - CNPJ do Administrador.
+  + legal_name - Razão social do Administrador.
+  + pj_user_id (integer) - ID da conta do Administrador na ZemoPay.
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "company_id": 1,
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995,
+      "updatedAt": "2021-03-16T17:42:21.180Z",
+      "createdAt": "2021-03-16T17:42:21.180Z"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: legal_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: pj_user_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+## Listar Administradores [/api/managers/get{?limit}{?page}{?pagination}{?cpf_cnpj}]
+Endpoint para listar os administradores criados.
+### Listar Administradores [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de administradores retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação.
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `28334677000185` (optional) - CPF ou CNPJ a ser procurado
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: cnpj 
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 1,
+          "cnpj": "28334677000185",
+          "legal_name": "CORRETORA ALINE",
+          "pj_user_id": 1995,
+          "createdAt": "2021-03-16T17:42:21.180Z",
+          "updatedAt": "2021-03-16T17:42:21.180Z",
+          "company_id": 1
+        }
+      ],
+      "count": 1,
+      "current_page": 1,
+      "totalPages": 1
+    }
+
+## Atualizar Administrador [/api/managers/update/{id}]
+Endpoint para atualizar as informações do administrador.
+### Atualizar Administrador [PUT]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995
+    }
+
++ Parameters
+  + cnpj - CNPJ do Administrador.
+  + legal_name - Razão social do Administrador.
+  + pj_user_id (integer) - ID da conta do Administrador na ZemoPay.
+  + id (integer) - ID do Administrador.
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995,
+      "createdAt": "2021-03-16T17:42:21.180Z",
+      "updatedAt": "2021-03-16T17:53:44.906Z",
+      "company_id": 1
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: legal_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: pj_user_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,id"
+    }
+
+## Atualizar Administrador [/api/managers/update/{id}]
+Endpoint para realizar atualizações parciais das informações do administrador.
+### Atualizar Administrador [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995
+    }
+
++ Parameters
+  + cnpj - CNPJ do Administrador.
+  + legal_name - Razão social do Administrador.
+  + pj_user_id (integer) - ID da conta do Administrador na ZemoPay. 
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "cnpj": "28334677000185",
+      "legal_name": "CORRETORA ALINE",
+      "pj_user_id": 1995,
+      "createdAt": "2021-03-16T17:42:21.180Z",
+      "updatedAt": "2021-03-16T17:53:44.906Z",
+      "company_id": 1
+    }
+
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,id"
+    }
+
+# Group Taxas do Administrador
+Para que seu administrador seja ativo, é necessário criar uma taxa para ele. Essa taxa é correspondente à quanto ele irá receber por boleto. Não é necessário haver um administrador para realizar a geração do boleto.
+
+## Criar Taxa [/api/managersfees/create]
+Endpoint para criar a taxa do administrador.
+### Criar Taxa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 1,
+      "consumer_company_id": 13,
+      "manager_id": 1
+    }
+
++ Parameters
+  + value (decimal) - Valor da taxa.
+  + consumer_company_id (integer) - ID da empresa.
+  + manager_id (integer) - ID do administrador.
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "value": "1.00",
+      "company_id": 1,
+      "consumer_company_id": 13,
+      "manager_id": 1,
+      "updatedAt": "2021-03-16T18:03:59.156Z",
+      "createdAt": "2021-03-16T18:03:59.156Z",
+      "active": true
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: consumer_company_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: manager_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Already created with param: consumer_company_id,manager_id,company_id"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "consumer_company_id,company_id"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "manager_id,company_id"
+    }
+
+## Listar taxas [/api/managersfees/get{?limit}{?page}{?pagination}{?cpf_cnpj}]
+Endpoint para listar as taxas criadas.
+### Listar taxas [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + limit: `10` (optional) - Quantidade de taxas retornadas no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+  + pagination: `true` (boolean, optional) - Indica se o response retornado terá paginação.
+      + true - Response com paginação.
+      + false - Response sem paginação.
+  + cpf_cnpj: `28334677000185` (optional) - CPF ou CNPJ a ser buscado.
+  + search: `search=consumer_company_cpf_cnpj:45344317832 OR (consumer_company_cpf_cnpj>14432151803 AND consumer_company_cpf_cnpj<14458965874)` (optional) - Campo de busca consumer_company_cpf_cnpj (ao utilizar o AND e OR é necessário que seja utilizado um espaçamento em volta).
+      + Parâmetros possíveis: consumer_company_cpf_cnpj
+      + &nbsp;: - Para buscar por equalidade.
+      + &nbsp;AND - Uso do operador AND do SQL.
+      + &nbsp;OR - Uso do operador OR do SQL
+      + &nbsp;> - Para buscar onde um atributo deve ser maior que valor informado.
+      + &nbsp;< - Para buscar onde um atributo deve ser menor que valor informado.
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 1,
+          "value": "1.00",
+          "active": true,
+          "createdAt": "2021-03-16T18:03:59.156Z",
+          "updatedAt": "2021-03-16T18:03:59.156Z",
+          "company_id": 1,
+          "consumer_company_id": 13,
+          "manager_id": 1,
+          "manager": {
+            "id": 1,
+            "cnpj": "28334677000185",
+            "legal_name": "CORRETORA ALINE",
+            "pj_user_id": 1995,
+            "createdAt": "2021-03-16T17:42:21.180Z",
+            "updatedAt": "2021-03-16T17:58:21.031Z",
+            "company_id": 1
+          },
+          "consumer_company": {
+            "id": 13,
+            "cpf_cnpj": "90253394848",
+            "type_person": "F",
+            "name": "Renata Tatiane Nascimento",
+            "contact_name": "Renata",
+            "createdAt": "2021-03-16T16:59:15.874Z",
+            "updatedAt": "2021-03-16T17:17:02.376Z",
+            "phone_id": 1,
+            "company_id": 1,
+            "consumer_company_fee_id": 20
+          }
+        }
+      ],
+      "count": 1,
+      "current_page": 1,
+      "totalPages": 1
+    }
+
+## Atualizar Taxas [/api/managersfees/update/{id}]
+Endpoint para atualizar a taxa pelo id.
+### Atualizar Taxas [PUT]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 1,
+      "status": "true"
+    }
+
++ Parameters
+  + value (decimal) - Valor da taxa.
+  + active (boolean) - Opção de taxa ativa ou inativa.
+      + true - Taxa ativa.
+      + false - Taxa inativa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "value": "1.00",
+      "active": true,
+      "createdAt": "2021-03-16T18:03:59.156Z",
+      "updatedAt": "2021-03-16T18:09:39.910Z",
+      "company_id": 1,
+      "consumer_company_id": 13,
+      "manager_id": 1
+    }
+
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: active"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,id"
+    }
+
+## Atualizar Taxas [/api/managersfees/update/{id}]
+Endpoint para realizar atualizações parciais da taxa pelo id.
+### Atualizar Taxas [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "value": 1,
+      "status": "true"
+    }
+
++ Parameters
+  + value (decimal) - Valor da taxa.
+  + active (boolean) - Opção de taxa ativa ou inativa.
+      + true - Taxa ativa.
+      + false - Taxa inativa.
+
+- Response 200
+
+  - Body
+    {
+      "id": 1,
+      "value": "1.00",
+      "active": true,
+      "createdAt": "2021-03-16T18:03:59.156Z",
+      "updatedAt": "2021-03-16T18:09:39.910Z",
+      "company_id": 1,
+      "consumer_company_id": 13,
+      "manager_id": 1
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,id"
+    }
+
+## Group Boletos
+Agora você já pode gerar boletos para seu sacador avalista, existem formas de criar boleto, sem juros, com juros, com split ou sem split. Existem dois tipos de split, o split de taxa, que divide a comissão com outros beneficiários e o split de boleto, que cada beneficiário recebe uma parte do valor do boleto. Também é possível listar, cancelar, atualizar a data de vencimento e valor, confirmar se o pagamento foi realizado e verificar pagamentos dos boletos por data.
+
+## Gerar Boleto [/api/billets/create]
+Essas são as maneiras de gerar boletos. Ao informar a taxa, você pode optar por utilizar um ou todos os tipos de taxas (multa, juros, desconto).
+### Sem informação de taxa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+  {
+    "billets": [
+      {
+        "payer_type": "01",
+        "payer_document": "41765620805",
+        "payer_name": "Gabriel de Oliveira Lima",
+        "payer_public_place": "Rua Francisco Reis",
+        "payer_district": "Jardim Portela",
+        "payer_city": "Itapevi",
+        "payer_state": "SP",
+        "payer_postal_code": "06695050",
+        "due_date": "2020-12-15",
+        "value": 150,
+        "cnpj": "08744817000186",
+        "billet_type": 1,
+        "external_id": 1234,
+        "description": "campo aberto"
+      }
+    ]
+  }
+
++ Parameters
+  + billets (array of objects) - Dados de criação do boleto.
+  + billets.payer_type - Pagador tipo de pessoa.
+      + 01 - Pessoa física.
+      + 02 - Pessoa jurídica.
+  + billets.payer_document - Pagador CPF ou CNPJ.
+  + billets.payer_name - Nome do pagador.
+  + billets.payer_public_place - Rua do pagador.
+  + billets.payer_district - Bairro do pagador.
+  + billets.payer_city - Cidade do pagador.
+  + billets.payer_state - Estado do pagador.
+  + billets.payer_postal_code - CEP do pagador.
+  + billets.due_date (date) - Data de vencimento do boleto (yyyy-mm-dd).
+  + billets.value (decimal) - Valor do boleto.
+  + billets.cnpj (optional) - CNPJ da empresa responsável por gerar o boleto (esse campo deve ser preenchido com o CNPJ da empresa).
+  + billets.billet_type (integer) - Tipo do boleto.
+      + 1 - Contrato de boleto liquidado.
+      + 2 - Contrato de boleto emitido.
+  + billets.external_id: `1234` (integer, optional) - Campo para o usuário inserir uma informação específica da cobrança como número de NF, nosso número entre outros.
+  + billets.description: `campo aberto` (optional) - Campo para o usuário inserir uma descrição do boleto (máximo de 150 caracteres).
+
+- Response 200
+
+  - Body
+    [
+      {
+        "billet": {
+          "id": 835,
+          "cnab_id": "73f7e036-40a9-486a-b364-e033c51db17d",
+          "identifier": "120010806",
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "cnpj": "08744817000186",
+          "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+          "number": "120010806",
+          "value": "150.00",
+          "due_date": "2020-12-15T15:00:00.000Z",
+          "bar_code": "65594847000000150000000002992500012001080600",
+          "digitable_line": "65590000020299250001320010806006484700000015000",
+          "fine_instruction": null,
+          "fine_date": null,
+          "fine_amount": null,
+          "discount_instruction": null,
+          "discount_date": null,
+          "discount_amount": null,
+          "interest_instruction": null,
+          "interest_date": null,
+          "interest_amount": null,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "status": false,
+          "paid_out": null,
+          "credited_date": null,
+          "value_paid": null,
+          "billet_type": 1,
+          "cancelIn": null,
+          "validate_here": true,
+          "protest_days": null,
+          "createdAt": "2020-09-02T01:36:16.188Z",
+          "updatedAt": "2020-09-02T01:36:29.983Z",
+          "company_id": 1,
+          "zemopay_fee": "2.00",
+          "beneficiaries": [
+            {
+              "id": 898,
+              "value": "461.00",
+              "type_liquidation": 1,
+              "createdAt": "2020-10-22T18:31:18.611Z",
+              "updatedAt": "2020-10-22T18:31:18.611Z",
+              "bank_id": null,
+              "billet_id": 1062
+            }
+          ],
+          "billet_ted_fee": 1,
+          "billet_total_ted_fees": 0,
+          "billet_fee": 2,
+          "billet_sum_fees": 2,
+          "value_discounted_fee": 148
+        },
+        "absolute_path": null
+      }
+    ]
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_type"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_document"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_public_place"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_district"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_city"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_state"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_postal_code"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: balance_limit"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: type_liquidation"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: amount"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,cpf_cnpj"
+    }
+
+## Gerar Boleto [/api/billets/create]
+### Com informação da taxa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "billets": [
+        {
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "due_date": "2020-12-15",
+          "value": 205,
+          "billet_type": 2,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "cnpj": "08744817000186",
+          "fine": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 1
+          },
+          "discount": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 10
+          },
+          "interest": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 0.01
+          }
+        },
+        {
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "due_date": "2020-12-15",
+          "value": 205,
+          "billet_type": 2,
+          "fine": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 1
+          },
+          "discount": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 10
+          },
+          "interest": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 0.01
+          }
+        }
+      ]
+    }
+
++ Parameters
+  + billets (array of objects) - Dados de criação do boleto.
+  + billets.payer_type - Pagador tipo de pessoa.
+      + 01 - Pessoa física.
+      + 02 - Pessoa jurídica.
+  + billets.payer_document - Pagador CPF ou CNPJ.
+  + billets.payer_name - Nome do pagador.
+  + billets.payer_public_place - Rua do pagador.
+  + billets.payer_district - Bairro do pagador.
+  + billets.payer_city - Cidade do pagador.
+  + billets.payer_state - Estado do pagador.
+  + billets.payer_postal_code - CEP do pagador.
+  + billets.due_date (date) - Data de vencimento do boleto (yyyy-mm-dd).
+  + billets.value (decimal) - Valor do boleto.
+  + billets.cnpj (optional) - CPF ou CNPJ da empresa ou consumidor responsável pela geração do boleto (se o campo não for informado, o ERP se tornará responsável). O parcelamento ocorrerá para uma conta registrada neste CNPJ.
+  + billets.billet_type (integer) - Tipo do boleto.
+      + 1 - Contrato de boleto liquidado.
+      + 2 - Contrato de boleto emitido.
+
+  + billets.external_id: `1234` (integer, optional) - Campo para o usuário inserir uma informação específica da cobrança como número de NF, nosso número entre outros.
+  + billets.description: `campo aberto` (optional) - Campo para o usuário inserir uma descrição do boleto (máximo de 150 caracteres).
+  + billets.fine (object, optional) - Informações da regra de negócio da multa do boleto (Se este campo for preenchido, os campos "billets.fine.instruction", "billets.fine.date" e "billets.fine.amount" se tornam obrigatórios).
+  + billets.fine.instruction (optional) - Código da multa.
+      + 0 - Não gravar a multa.
+      + 1 - Valor fixo.
+      + 2 - Percentual.
+  + billets.fine.date (date, optional) - Data da multa do título (yyyy-mm-dd).
+  + billets.fine.amount (decimal, optional) - Valor ou percentual da multa do título.
+
+  + billets.discount (object, optional) - Informações da regra de negócio do desconto do boleto (Se este campo for preenchido, os campos "billets.discount.instruction", "billets.discount.date" and "billets.discount.amount" se tornam obrigatórios).
+  + billets.discount.instruction (optional) - Código do desconto.
+      + 1 - Porcentagem até a data relatada.
+      + 2 - Porcentagem sobre o valor nominal por antecipação (dias corridos).
+      + 3 - Valor até a data informada.
+      + 4 - Valor acima do valor nominal por antecipação (dias corridos).
+  + billets.discount.date (date, optional) - Data de desconto do título (yyyy-mm-dd).
+  + billets.discount.amount (decimal, optional) - Valor ou percentual do desconto do título.
+
+  + billets.interest (object, optional) - Informações da regra de negócio do juros do boleto (Se este campo for preenchido, os campos "billets.interest.instruction", "billets.interest.date" and "billets.interest.amount" se tornam obrigatórios).
+  + billets.interest.instruction (optional) - Código do juros.
+      + 0 - Sem registro de juros.
+      + 1 - Valor fixo.
+      + 2 - Percentual.
+  + billets.interest.date (date, optional) - Data de juros padrão (yyyy-mm-dd).
+  + billets.interest.amount (decimal, optional) - Montante total dos juros no mês, mas são descontados juros simples por dia.
+
+- Response 200
+
+  - Body
+    [
+      {
+        "billet": {
+          "id": 34,
+          "cnab_id": "28dac8ac-ff12-454a-8f85-356084c6c1f4",
+          "company_id": 1,
+          "identifier": "120004137",
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "cnpj": "08744817000186",
+          "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+          "number": "120004137",
+          "value": "266.00",
+          "due_date": "2020-12-15T15:00:00.000Z",
+          "bar_code": "65598847000000266000000002992500012000413700",
+          "digitable_line": "65590000020299250001320004137004884700000026600",
+          "fine_instruction": 1,
+          "fine_date": "2020-12-15T15:00:00.000Z",
+          "fine_amount": "1.00",
+          "discount_instruction": 1,
+          "discount_date": "2020-12-15T15:00:00.000Z",
+          "discount_amount": "10.00",
+          "interest_instruction": 1,
+          "interest_date": "2020-12-15T15:00:00.000Z",
+          "interest_amount": "0.01",
+          "external_id": 1234,
+          "description": "campo aberto",
+          "updatedAt": "2020-05-27T19:26:19.632Z",
+          "createdAt": "2020-05-27T19:26:19.632Z",
+          "status": false,
+          "paid_out": Null,
+          "credited_date": Null
+        },
+        "absolute_path": "https://pagadoriahomolog.s3.amazonaws.com/billets/billet_120004137.pdf"
+      },
+      {
+        "billet": {
+          "id": 35,
+          "cnab_id": "da7867f3-8cda-4d23-8cfb-655bc29944b5",
+          "company_id": 1,
+          "identifier": "120004138",
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "cnpj": "08744817000186",
+          "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+          "number": "120004138",
+          "value": "103.00",
+          "due_date": "2020-12-15T15:00:00.000Z",
+          "bar_code": "65597847000000103000000002992500012000413800",
+          "digitable_line": "65590000020299250001320004138002784700000010300",
+          "fine_instruction": 1,
+          "fine_date": "2020-12-15T15:00:00.000Z",
+          "fine_amount": "1.00",
+          "discount_instruction": 1,
+          "discount_date": "2020-12-15T15:00:00.000Z",
+          "discount_amount": "10.00",
+          "interest_instruction": 1,
+          "interest_date": "2020-12-15T15:00:00.000Z",
+          "interest_amount": "0.01",
+          "updatedAt": "2020-05-27T19:26:19.991Z",
+          "createdAt": "2020-05-27T19:26:19.991Z",
+          "status": false,
+          "paid_out": "2020-05-27",
+          "credited_date": "2020-05-28"
+        },
+        "absolute_path": "https://pagadoriahomolog.s3.amazonaws.com/billets/billet_120004138.pdf"
+      }
+    ]
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_type"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_document"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_public_place"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_district"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_city"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_state"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_postal_code"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: balance_limit"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: type_liquidation"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: amount"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,cpf_cnpj"
+    }
+
+
+## Listar Boletos [/api/billets/get{?limit}{?page}{?cnpj}{?identifier}{?cancel}]
+Endpoint que lista todos os boletos criados pelo ERP.
+### Listar Boletos [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  
+  + cnpj: `14432151803` (optional) - Número do CNPJ do sacador avalista.
+  + identifier: `120905614` (optional) - Identificador ou número do boleto registrado.
+  + cancel: `false` (boolean, optional) - Filtro para boleto cancelado.
+      + true - Boleto cancelado.
+      + false - Boleto não cancelado.
+  + limit: `10` (optional) - Quantidade de boletos retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+
+- Response 200
+
+  - Body
+    {
+      "data": [
+        {
+          "id": 9,
+          "cnab_id": "00cab67b-19d2-4842-8c9a-216dc31c0d19",
+          "identifier": "120905614",
+          "payer_type": "01",
+          "payer_document": "10721153950",
+          "payer_name": "CHRISTIAN LIMA",
+          "payer_public_place": "RUA INGLATERRA  1219",
+          "payer_district": "PASSO DOS FORTES",
+          "payer_city": "CHAPECO",
+          "payer_state": "SC",
+          "payer_postal_code": "89805536",
+          "cnpj": "14432151803",
+          "name": "IMOBILIÁRIA NOSTRA CASA LTDA",
+          "number": "120905614",
+          "value": "920.00",
+          "due_date": "2021-02-10T13:00:00.000Z",
+          "bar_code": "65595852700000920000000002992500012040561400",
+          "digitable_line": "65590000020299250001320405614007585270000092000",
+          "fine_instruction": 1,
+          "fine_date": "2021-02-10T13:00:00.000Z",
+          "fine_amount": "92.00",
+          "discount_instruction": null,
+          "discount_date": null,
+          "discount_amount": null,
+          "interest_instruction": 1,
+          "interest_date": "2021-02-15T13:00:00.000Z",
+          "interest_amount": "0.0563",
+          "status": true,
+          "paid_out": "2020-12-10",
+          "credited_date": "2020-12-11",
+          "value_paid": "1100.00",
+          "billet_type": 1,
+          "cancelIn": null,
+          "validate_here": true,
+          "protest_days": null,
+          "external_id": null,
+          "description": null,
+          "cash_out": true,
+          "beneficiaries_paid": false,
+          "createdAt": "2020-09-21T17:24:05.496Z",
+          "updatedAt": "2021-02-10T15:37:48.047Z",
+          "company_id": 1,
+          "absolute_path": "https://pagadoriahomolog.s3.amazonaws.com/billets/billet_120905614.pdf",
+          "billet_ted_fee": 1,
+          "billet_total_ted_fees": 1,
+          "billet_fee": 1,
+          "billet_sum_fees": 2,
+          "value_discounted_fee": 918,
+          "beneficiaries": [
+            {
+              "id": 1,
+              "value": "500.00",
+              "type_liquidation": 1,
+              "createdAt": "2020-12-28T19:20:33.529Z",
+              "updatedAt": "2020-12-28T19:20:33.529Z",
+              "bank_id": null,
+              "billet_id": 9
+            },
+            {
+              "id": 2,
+              "value": "420.00",
+              "type_liquidation": 2,
+              "createdAt": "2020-12-28T19:22:07.512Z",
+              "updatedAt": "2020-12-28T19:22:07.512Z",
+              "bank_id": 1,
+              "billet_id": 9
+            }
+          ]
+        }
+      ],
+      "count": 10,
+      "current_page": 1,
+      "totalPages": 7
+    }
+    
+
+## Cancelar Boleto [/api/billets/cancel]
+Endpoint para cancelar um boleto.
+### Cancelar Boleto [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body  
+    {
+      "identifier_number": "120304341"
+    }
+
++ Parameters
+  + identifier_number - Numero identificador do boleto.
+
+- Response 200
+
+  - Body
+    {
+      "retorno": {
+        "codigo": 0,
+        "mensagem": "Alteração acatada."
+      }
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: identifier_number"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: due_date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: status"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cancelIn"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "identifier,company_id"
+    }
+
+## Pesquisar no CNAB [/api/billets/cnab]
+Endpoint para retornar se o boleto foi pago.
+### Pesquisar no CNAB [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "billet": "120405613"
+    }
+
++ Parameters
+  + billet - Número do boleto.
+
+- Response 200
+
+  - Body
+    {
+      "data": [],
+      "message": "no change in status."
+    }
+
+- Response 200
+
+  - Body
+    {
+      "data": {
+        "uuid": "00cab67b-19d2-4842-8c9a-216dc31c0d19",
+        "cnab_identifier": "120305116",
+        "original_value": 1100,
+        "paid_value": 1100,
+        "fine_interest": 0,
+        "discount_value": 0,
+        "iof_value": 0,
+        "credited_date": "2020-12-11",
+        "receivement": "2020-12-10",
+        "created_at": "2020-12-11 10:43:49"
+      },
+      "message": "billets successfully recovered."
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: billet"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "identifier,company_id"
+    }
+
+## Atualizar Valor [/api/billets/update/value]
+Endpoint para atualizar o valor pelo identificador.
+### Atualizar Valor [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "identifier": "120905866",
+      "value": 100,
+      "beneficiaries": [
+        {
+          "id": 142,
+          "amount": 50
+        },
+        {
+          "id": 143,
+          "amount": 50
+        }
+      ]
+    }
+
++ Parameters
+  + identifier - Identificador do boleto.
+  + value (decimal) - Valor do boleto.
+  + beneficiaries (object, optional) - Dados dos beneficiários.
+  + beneficiaries.id (integer, optional) - ID do beneficiário.
+  + beneficiaries.amount (decimal, optional) - Valor reservado para o beneficiário.
+
+- Response 200
+
+  - Body
+    {
+      "retorno": {
+        "codigo": 0,
+        "mensagem": "Alteração acatada."
+      }
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: identifier"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: beneficiaries_length"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "identifier,company_id,status"
+    }
+
+## Atualizar Data de Vencimento [/api/billets/update/duedate]
+Endpoint para atualizar a data de vencimento pelo identificador.
+### Atualizar Data de Vencimento [PATCH]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "identifier": "120304308",
+      "due_date": "2020-12-10"
+    }
+
++ Parameters
+  + identifier - Identificador do boleto.
+  + due_date (date) - Data de vencimento do boleto.
+
+- Response 200
+
+  - Body
+    {
+      "retorno": {
+        "codigo": 0,
+        "mensagem": "Alteração acatada."
+      }
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: due_date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: identifier"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: due_date"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "identifier,company_id"
+    }
+
+## Listar Boletos Pagos [/api/billets/getPaidOut{?cnpj}{?initial_date}{?final_date}{?limit}{?page}]
+Endpoint que retorna todos os boletos pagos na data informada.
+### Listar Boletos Pagos [GET]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
++ Parameters
+  + cnpj: `08744817000186` (optional) - Número do CNPJ do sacador avalista.
+  + initial_date: `2020-08-11` (date, optional) - Data inicial do parâmetro, com padrão de data hoje.
+  + final_date: `2020-08-11` (date, optional) - Data final do parâmetro, com padrão de data hoje.
+  + limit: `10` (optional) - Quantidade de boletos pagos retornados no array.
+  + page: `1` (optional) - Número da página a ser acessada.
+
+- Response 200
+  {
+    "data": [
+      {
+        "id": 741,
+        "cnab_id": "8853f6a1-9c69-47cd-8873-68e7fe8623be",
+        "identifier": "120010735",
+        "payer_type": "01",
+        "payer_document": "41765620805",
+        "payer_name": "Gabriel de Oliveira Lima",
+        "payer_public_place": "Rua Francisco Reis",
+        "payer_district": "Jardim Portela",
+        "payer_city": "Itapevi",
+        "payer_state": "SP",
+        "payer_postal_code": "06695050",
+        "cnpj": "08744817000186",
+        "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+        "number": "120010735",
+        "value": "101.00",
+        "due_date": "2020-12-15T15:00:00.000Z",
+        "bar_code": "65592847000000101000000002992500012001073500",
+        "digitable_line": "65590000020299250001320010735007284700000010100",
+        "fine_instruction": null,
+        "fine_date": null,
+        "fine_amount": null,
+        "discount_instruction": null,
+        "discount_date": null,
+        "discount_amount": null,
+        "interest_instruction": null,
+        "interest_date": null,
+        "interest_amount": null,
+        "status": true,
+        "paid_out": "2020-08-11",
+        "credited_date": "2020-08-12",
+        "value_paid": null,
+        "billet_type": 2,
+        "cancelIn": null,
+        "validate_here": true,
+        "protest_days": null,
+        "createdAt": "2020-08-10T13:17:43.977Z",
+        "updatedAt": "2020-08-10T13:17:58.561Z",
+        "company_id": 1,
+        "absolute_path": "https://pagadoriahomolog.s3.amazonaws.com/billets/billet_120010735.pdf",
+        "billet_ted_fee": 1,
+        "billet_total_ted_fees": 0,
+        "billet_fee": 1,
+        "billet_sum_fees": 1,
+        "value_discounted_fee": 100
+      },
+      {
+        "id": 746,
+        "cnab_id": "cba8c3b0-eb21-4c26-be9e-664d0eb1758d",
+        "identifier": "120010739",
+        "payer_type": "01",
+        "payer_document": "41765620805",
+        "payer_name": "Gabriel de Oliveira Lima",
+        "payer_public_place": "Rua Francisco Reis",
+        "payer_district": "Jardim Portela",
+        "payer_city": "Itapevi",
+        "payer_state": "SP",
+        "payer_postal_code": "06695050",
+        "cnpj": "08744817000186",
+        "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+        "number": "120010739",
+        "value": "225.00",
+        "due_date": "2020-12-15T15:00:00.000Z",
+        "bar_code": "65592847000000225000000002992500012001073900",
+        "digitable_line": "65590000020299250001320010739009284700000022500",
+        "fine_instruction": 1,
+        "fine_date": "2020-12-15T15:00:00.000Z",
+        "fine_amount": "1.00",
+        "discount_instruction": 1,
+        "discount_date": "2020-12-15T15:00:00.000Z",
+        "discount_amount": "10.00",
+        "interest_instruction": 1,
+        "interest_date": "2020-12-15T15:00:00.000Z",
+        "interest_amount": "0.0003",
+        "status": true,
+        "paid_out": "2020-08-11",
+        "credited_date": "2020-08-12",
+        "value_paid": null,
+        "billet_type": 2,
+        "cancelIn": null,
+        "validate_here": true,
+        "protest_days": null,
+        "createdAt": "2020-08-10T13:20:42.923Z",
+        "updatedAt": "2020-08-10T13:20:47.385Z",
+        "company_id": 1,
+        "absolute_path": "https://pagadoriahomolog.s3.amazonaws.com/billets/billet_120010739.pdf",
+        "billet_ted_fee": 1,
+        "billet_total_ted_fees": 2,
+        "billet_fee": 1,
+        "billet_sum_fees": 3,
+        "value_discounted_fee": 222
+      }
+    ],
+    "count": 2,
+    "current_page": 1,
+    "totalPages": 2
+  }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: initial_date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: final_date"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "No payment slip was paid on this date"
+    }
+
+## Group Boleto com Split
+Agora você pode gerar boletos para o seu sacador avalista, existem maneiras de criar um boleto, sem juros, com juros, com divisão ou sem divisão. Também é possível listar, cancelar, atualizar a data e o valor final, confirmar que o pagamento foi efetuado e verificar o pagamento dos boletos por data.
+
+## Gerar Boleto [/api/billets/create/split]
+Este é um exemplo de como criar muitos boletos com beneficiários. Ao informar as taxas, você pode optar por usar um ou todos as formas de impostos disponíveis.
+### Sem informação de taxa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "billets": [
+        {
+          "payer_type": "01",
+          "payer_document": "43825797830",
+          "payer_name": "Vitor Merguizo",
+          "payer_public_place": "Rua Apinajés, 235",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Perdizes",
+          "payer_state": "SP",
+          "payer_postal_code": "05017000",
+          "due_date": "2020-09-30",
+          "value": 12,
+          "billet_type": 1,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "beneficiaries": [
+          {
+            "cnpj": "87677433000164",
+            "amount": 3,
+            "type_liquidation": 1
+          },
+          {
+            "cnpj": "34143093000125",
+            "amount": 4,
+            "type_liquidation": 1
+          },
+          {
+            "cnpj": "84520264000166",
+            "amount": 5,
+            "type_liquidation": 2
+          }
+          ]
+        }
+      ]
+    }
+
++ Parameters
+  + billets (array of objects) - Dados de criação do boleto.
+  + billets.payer_type - Pagador tipo de pessoa.
+      + 01 - Pessoa física.
+      + 02 - Pessoa jurídica.
+  + billets.payer_document - Pagador CPF ou CNPJ.
+  + billets.payer_name - Nome do pagador.
+  + billets.payer_public_place - Rua do pagador.
+  + billets.payer_district - Bairro do pagador.
+  + billets.payer_city - Cidade do pagador.
+  + billets.payer_state - Estado do pagador.
+  + billets.payer_postal_code - CEP do pagador.
+  + billets.due_date (date) - Data de vencimento do boleto (yyyy-mm-dd).
+  + billets.value (decimal) - Valor do boleto.
+  + billets.billet_type (integer) - Tipo do boleto.
+      + 1 - Contrato de boleto liquidado.
+      + 2 - Contrato de boleto emitido.
+  + billets.external_id: `1234` (integer, optional) - Campo para o usuário inserir uma informação específica da cobrança como número de NF, nosso número entre outros.
+  + billets.description: `campo aberto` (optional) - Campo para o usuário inserir uma descrição do boleto (máximo de 150 caracteres).
+  + billets.cnpj (optional) - CPF ou CNPJ da empresa ou consumidor responsável pela geração do boleto (se o campo não for informado, o ERP se tornará responsável). O parcelamento ocorrerá para uma conta registrada neste CNPJ.
+  + billets.beneficiaries (object, optional) - O beneficiário objeto pode ser um ou mais managers. Aqui, o responsável por gerar o boleto (billets.cnpj) também pode ser informado.
+  + billets.beneficiaries.cnpj (optional) - Beneficiário CNPJ ou CPF.
+  + billets.beneficiaries.amount (decimal, optional) - Valor reservado para o beneficiário.
+  + billets.beneficiaries.type_liquidation (integer, optional) - Tipo de liquidação.
+      + 1 - Liquidação interna.
+      + 2 - Liquidação externa.
+
+- Response 200
+
+  - Body
+    [
+      {
+        "billet": {
+          "id": 246,
+          "cnab_id": "03c1ca1a-20c3-4280-8bb7-81e17f04e3a0",
+          "company_id": 1,
+          "identifier": "120004370",
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "cnpj": "08744817000186",
+          "name": "Cdt Solucoes Em Meios De Pagamento Ltda",
+          "number": "120004370",
+          "value": "205.00",
+          "due_date": "2020-12-15T15:00:00.000Z",
+          "bar_code": "65591847000000205000000002992500012000437000",
+          "digitable_line": "65590000020299250001320004370001184700000020500",
+          "fine_instruction": null,
+          "fine_date": null,
+          "fine_amount": null,
+          "discount_instruction": null,
+          "discount_date": null,
+          "discount_amount": null,
+          "interest_instruction": null,
+          "interest_date": null,
+          "interest_amount": null,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "billet_type": 2,
+          "updatedAt": "2020-06-15T16:36:37.035Z",
+          "createdAt": "2020-06-15T16:36:37.035Z",
+          "status": false,
+          "cancelIn": null,
+          "beneficiaries": [
+            {
+              "cnpj": "08744817000186",
+              "amount": 2,
+              "type_liquidation": 2,
+              "bank_id": 11
+            },
+            {
+              "cnpj": "87677433000164",
+              "amount": 30,
+              "type_liquidation": 1
+            },
+            {
+              "cnpj": "34143093000125",
+              "amount": 30,
+              "type_liquidation": 1,
+              "bank_id": 15
+            },
+            {
+              "cnpj": "84520264000166",
+              "amount": 40,
+              "type_liquidation": 2,
+              "bank_id": 13
+            }
+          ]
+        },
+        "absolute_path": null
+      }
+    ]
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_type"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_document"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_public_place"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_district"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_city"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_state"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_postal_code"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: billets"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: due_date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: balance_limit"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: type_liquidation"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: amount"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,cpf_cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: billet_type"
+    }
+
+
+## Gerar Boleto [/api/billets/create/split]
+### Com informação da taxa [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "billets": [
+        {
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "due_date": "2020-12-15",
+          "value": 255,
+          "billet_type": 2,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "fine": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 1
+          },
+          "discount": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 10
+          },
+          "interest": {
+            "instruction": "1",
+            "date": "2020-12-15",
+            "amount": 0.01
+          },
+            "beneficiaries": [
+            {
+                "cnpj": "08744817000186",
+                "amount": 155,
+                "type_liquidation": 2
+              },
+              {
+                "cnpj": "87677433000164",
+                "amount": 30,
+                "type_liquidation": 1
+              },
+              {
+                "cnpj": "34143093000125",
+                "amount": 30,
+                "type_liquidation": 1
+              },
+              {
+                "cnpj": "84520264000166",
+                "amount": 40,
+                "type_liquidation": 2
+              }
+            ]
+        }
+      ]
+    }
+
++ Parameters
+  + billets (array of objects) - Dados de criação do boleto.
+  + billets.payer_type - Pagador tipo de pessoa.
+      + 01 - Pessoa física.
+      + 02 - Pessoa jurídica.
+  + billets.payer_document - Pagador CPF ou CNPJ.
+  + billets.payer_name - Nome do pagador.
+  + billets.payer_public_place - Rua do pagador.
+  + billets.payer_district - Bairro do pagador.
+  + billets.payer_city - Cidade do pagador.
+  + billets.payer_state - Estado do pagador.
+  + billets.payer_postal_code - CEP do pagador.
+  + billets.due_date (date) - Data de vencimento do boleto (yyyy-mm-dd).
+  + billets.value (decimal) - Valor do boleto.
+  + billets.billet_type (integer) - Tipo do boleto.
+      + 1 - Contrato de boleto liquidado.
+      + 2 - Contrato de boleto emitido.
+  + billets.external_id: `1234` (integer, optional) - Campo para o usuário inserir uma informação específica da cobrança como número de NF, nosso número entre outros.
+  + billets.description: `campo aberto` (optional) - Campo para o usuário inserir uma descrição do boleto (máximo de 150 caracteres).
+  + billets.cnpj (optional) - CPF ou CNPJ da empresa ou consumidor responsável pela geração do boleto (se o campo não for informado, o ERP se tornará responsável). O parcelamento ocorrerá para uma conta registrada neste CNPJ.
+  + billets.beneficiaries (object, optional) - O beneficiário objeto pode ser um ou mais managers. Aqui, o responsável por gerar o boleto (billets.cnpj) também pode ser informado.
+  + billets.beneficiaries.cnpj (optional) - Beneficiário CNPJ ou CPF.
+  + billets.beneficiaries.amount (decimal, optional) - Valor reservado para o beneficiário.
+  + billets.beneficiaries.type_liquidation (integer, optional) - Tipo de liquidação.
+      + 1 - Liquidação interna.
+      + 2 - Liquidação externa.
+
+  + billets.fine (object, optional) - Informações da regra de negócio da multa do boleto (Se este campo for preenchido, os campos "billets.fine.instruction", "billets.fine.date" e "billets.fine.amount" se tornam obrigatórios).
+  + billets.fine.instruction (optional) - Código da multa.
+      + 0 - Não gravar a multa.
+      + 1 - Valor fixo.
+      + 2 - Percentual.
+  + billets.fine.date (date, optional) - Data da multa do título (yyyy-mm-dd).
+  + billets.fine.amount (decimal, optional) - Valor ou percentual da multa do título.
+
+  + billets.discount (object, optional) - Informações da regra de negócio do desconto do boleto (Se este campo for preenchido, os campos "billets.discount.instruction", "billets.discount.date" and "billets.discount.amount" se tornam obrigatórios).
+  + billets.discount.instruction (optional) - Código do desconto.
+      + 1 - Porcentagem até a data relatada.
+      + 2 - Porcentagem sobre o valor nominal por antecipação (dias corridos).
+      + 3 - Valor até a data informada.
+      + 4 - Valor acima do valor nominal por antecipação (dias corridos).
+  + billets.discount.date (date, optional) - Data de desconto do título (yyyy-mm-dd).
+  + billets.discount.amount (decimal, optional) - Valor ou percentual do desconto do título.
+
+  + billets.interest (object, optional) - Informações da regra de negócio do juros do boleto (Se este campo for preenchido, os campos "billets.interest.instruction", "billets.interest.date" and "billets.interest.amount" se tornam obrigatórios).
+  + billets.interest.instruction (optional) - Código do juros.
+      + 0 - Sem registro de juros.
+      + 1 - Valor fixo.
+      + 2 - Percentual.
+  + billets.interest.date (date, optional) - Data de juros padrão (yyyy-mm-dd).
+  + billets.interest.amount (decimal, optional) - Montante total dos juros no mês, mas são descontados juros simples por dia.
+
+- Response 200
+
+  - Body
+    [
+      {
+        "billet": {
+          "id": 665,
+          "cnab_id": "6698ec8e-cde8-4b4f-91bb-d0fd0c56ea9f",
+          "identifier": "120010696",
+          "payer_type": "01",
+          "payer_document": "41765620805",
+          "payer_name": "Gabriel de Oliveira Lima",
+          "payer_public_place": "Rua Francisco Reis",
+          "payer_district": "Jardim Portela",
+          "payer_city": "Itapevi",
+          "payer_state": "SP",
+          "payer_postal_code": "06695050",
+          "cnpj": "87677433000164",
+          "name": "CORPORATION LTDA",
+          "number": "120010696",
+          "value": "255.00",
+          "due_date": "2020-12-15T15:00:00.000Z",
+          "bar_code": "65595847000000255000000002992500012001069600",
+          "digitable_line": "65590000020299250001320010696001584700000025500",
+          "fine_instruction": 1,
+          "fine_date": "2020-12-15T15:00:00.000Z",
+          "fine_amount": "1.00",
+          "discount_instruction": 1,
+          "discount_date": "2020-12-15T15:00:00.000Z",
+          "discount_amount": "10.00",
+          "interest_instruction": 1,
+          "interest_date": "2020-12-15T15:00:00.000Z",
+          "interest_amount": "0.0003",
+          "external_id": 1234,
+          "description": "campo aberto",
+          "status": false,
+          "paid_out": null,
+          "credited_date": null,
+          "billet_type": 2,
+          "cancelIn": null,
+          "validate_here": true,
+          "protest_days": null,
+          "createdAt": "2020-07-13T20:18:19.938Z",
+          "updatedAt": "2020-07-13T20:18:28.867Z",
+          "company_id": 1,
+          "zemopay_fee": "1.00",
+          "beneficiaries": [
+            {
+              "cnpj": "08744817000186",
+              "amount": 155,
+              "type_liquidation": 2,
+              "bank_id": 11
+            },
+            {
+              "cnpj": "87677433000164",
+              "amount": 27,
+              "type_liquidation": 1
+            },
+            {
+              "cnpj": "34143093000125",
+              "amount": 30,
+              "type_liquidation": 1,
+              "bank_id": 15
+            },
+            {
+              "cnpj": "84520264000166",
+              "amount": 40,
+              "type_liquidation": 2,
+              "bank_id": 13
+            }
+          ]
+        },
+        "absolute_path": null
+      }
+    ]
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_type"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_document"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_name"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_public_place"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_district"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_city"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_state"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Missing param",
+      "message": "Missing param: payer_postal_code"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: due_date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid date: date"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: value"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: balance_limit"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: type_liquidation"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: amount"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: cnpj"
+    }
+
+- Response 400
+
+  - Body
+    {
+      "name": "Invalid param",
+      "message": "Invalid param: billet_type"
+    }
+
+- Response 404
+
+  - Body
+    {
+      "name": "Not found",
+      "message": "company_id,cpf_cnpj"
+    }
+
+##Group PIX
+
+## Criar QR Code Dinâmico [/api/pix/create]
+**Em desenvolvimento.** Endpoint para criação de QR code Dinâmico.
+### Criar QR Code Dinâmico [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+  - Body
+    {
+      "pix": [
+        {
+          "payer_type": "F",
+          "payer_document": "08706254601",
+          "payer_name": "Shigeru Miyamoto",
+          "payer_question": "Pesquisa de Satisfação",
+          "payer_city": "Sao Paulo",
+          "payer_postal_code": "06460000",
+          "cpf_cnpj": "87677433000164",
+          "due_date": "2020-12-12",
+          "date_expiration": "2020-01-25",
+          "value": 1000.5,
+          "final_value": 1010.5,
+          "pix_type": 1,
+          "fees_code": 1,
+          "fine_amount": 15,
+          "discount_amount": 10,
+          "interest_amount": 5,
+          "external_id": 1234,
+          "description": "campo aberto",
+          "allow_acceptance": true,
+          "allow_change": false,
+          "instruction": "Testando campo instruction",
+          "details": [
+            {
+              "title": "campo aberto",
+              "content": "campo aberto"
+            }
+          ],
+          "beneficiaries": [
+            {
+              "cnpj": "08744817000186",
+              "amount": 100.5,
+              "type_liquidation": 2
+            }, {
+              "cnpj": "87677433000164",
+              "amount": 900,
+              "type_liquidation": 1
+            }
+          ]
+        }
+      ]
+    }
+
++ Parameters
+  + pix (object) - Informações do PIX.
+  + pix.payer_type: `F` (optional) - Tipo do beneficiário.
+      + F - Para pessoa física.
+      + J - Para pessoa jurídica.
+  + pix.payer_document: `08706254601` - Documento do pagador.
+  + pix.payer_name: `Shigeru Miyamoto` - Nome do Pagador.
+  + pix.payer_question: `Pesquisa de Satisfação` (optional) - Campo aberto para o pagador passar qualquer informação desejada.
+  + pix.payer_city: `Sao Paulo` - Cidade do pagador.
+  + pix.payer_postal_code: `06460000` - CEP do pagador.
+  + pix.cpf_cnpj: `87677433000164` - CPF ou CNPJ do emissor do Pix (sacador avalista).
+  + pix.due_date: `2020-12-12` (date) - Data de vencimento do QR Code.
+  + pix.date_expiration: `2020-01-23` (date) - Data de expiração.
+  + pix.value: `1000.5` (decimal) - Valor da operação.
+  + pix.final_value: `1010.5` - Valor total.
+  + pix_type: `1` - Tipo de Pix.
+      + 1 - Contrato de Pix liquidado.
+      + 2 - Contrato de Pix emitido.
+  + pix.fees_code: `1` (integer, optional) - Tipo de taxa.
+      + 1 - Taxa por valor.
+      + 2 - Taxa por porcentagem.
+  + pix.fine_amount: `15` (decimal, optional) - Valor ou percentual da multa do título.
+  + pix.discount_amount: `10` (decimal, optional) - Valor do desconto do QR code.
+  + pix.interest_amount: `5` (decimal, optional) - Montante total dos juros no mês, mas são descontados juros simples por dia.
+  + pix.external_id: `1234` (integer, optional) - Campo para o usuário inserir uma informação específica da cobrança como número de NF, nosso número entre outros.
+  + pix.description: `campo aberto` (optional) - Campo para o usuário inserir uma descrição do pix (máximo de 150 caracteres).
+  + pix.allow_acceptance: `true` (boolean, optional) - Indica se a cobrança pode ser aceita após o vencimento ou expiração do QR Code.
+      + Default: `true`
+  + pix.allow_change: `false` (boolean, optional) - Indica se o pagador tem permissão para alterar o valor final do documento.
+      + Default: `false`
+  + pix.instruction: `Testando campo instruction` (optional) - Campo para inserir informações no pdf do Pix.
+  + pix.details (array of object, optional) - Objeto com campo aberto usado para exibir informações adicionais ao pagador.
+  + pix.details.title: `campo aberto` (optional) - Campo aberto usado para exibir informações adicionais ao pagador.
+  + pix.details.content: `campo aberto` (optional) - Campo aberto usado para exibir informações adicionais ao pagador.
+  + pix.beneficiaries (array of object, optional) -  
+  + pix.beneficiaries.cpf_cnpj: `08744817000186` (optional) - CPF ou CNPJ do beneficiário.
+  + pix.beneficiaries.amount: `155` (decimal, optional) - Valor reservado para ao beneficiário.
+  + pix.beneficiaries.type_liquidation: `2` (integer, optional) - Tipo de liquidação.
+      + 1 - Liquidação interna.
+      + 2 - Liquidação externa.
+
+- Response 200
+
+  - Body
+    [
+      {
+        "pix": {
+          "id": 83,
+          "id_account": 8060,
+          "key": "08a049cd-2fc5-49bd-bed6-2b492882cba5",
+          "id_tx": "em4ypFPjPsQdgUVEVysXiKLcT83",
+          "payee_name": "Frederico de Castro Amaral",
+          "external_id": 1234,
+          "description": "campo aberto",
+          "payer_type": "F",
+          "payer_document": "08706254601",
+          "payer_name": "Shigeru Miyamoto",
+          "payer_question": "Pesquisa de Satisfação",
+          "payer_city": "Sao Paulo",
+          "payer_postal_code": "06460000",
+          "cpf_cnpj": "87677433000164",
+          "name": "CORPORATION LTDA",
+          "value": "1000.50",
+          "final_value": "1010.50",
+          "due_date": "2020-12-12T00:00:00.000Z",
+          "date_expiration": "2020-01-25T00:00:00.000Z",
+          "fees_code": 1,
+          "fine_amount": "15.00",
+          "discount_amount": "10.00",
+          "interest_amount": "5.0000",
+          "status": false,
+          "paid_out": null,
+          "credited_date": null,
+          "value_paid": null,
+          "allow_acceptance": true,
+          "allow_change": false,
+          "pix_type": 1,
+          "cancelIn": null,
+          "validate_here": true,
+          "protest_days": null,
+          "cash_out": false,
+          "beneficiaries_paid": false,
+          "instruction": "Testando campo instruction",
+          "createdAt": "2020-11-16T04:01:03.859Z",
+          "updatedAt": "2020-11-16T04:01:08.118Z",
+          "company_id": 1,
+          "qr_code_id": null,
+          "zemopay_fee": "2.00",
+          "beneficiaries": [
+            {
+              "id": 37,
+              "value": "100.50",
+              "type_liquidation": 2,
+              "bank_id": 11,
+              "pix_id": 83,
+              "updatedAt": "2020-11-16T04:01:08.187Z",
+              "createdAt": "2020-11-16T04:01:08.187Z"
+            },
+            {
+              "id": 38,
+              "value": "897.00",
+              "type_liquidation": 1,
+              "bank_id": null,
+              "pix_id": 83,
+              "updatedAt": "2020-11-16T04:01:08.188Z",
+              "createdAt": "2020-11-16T04:01:08.188Z"
+            }
+          ],
+          "pix_ted_fee": 1,
+          "pix_total_ted_fees": 1,
+          "pix_fee": 2,
+          "pix_sum_fees": 3,
+          "value_discounted_fee": 997.5,
+          "details": [
+            {
+              "id": 19,
+              "title": "campo aberto",
+              "content": "campo aberto",
+              "pix_id": 83,
+              "company_id": 1,
+              "updatedAt": "2020-11-16T04:01:08.151Z",
+              "createdAt": "2020-11-16T04:01:08.151Z"
+            }
+          ],
+          "qrCode": {
+            "id": 35,
+            "qr_code_id_tx": "em4ypFPjPsQdgUVEVysXiKLcT83",
+            "qr_code_emv": "00020101021226920014br.gov.bcb.pix2570api-h.developer.btgpactual.com/v1/q/d/a7d8141fba5c495db9d9e930d7fef01752040000530398654071010.505802BR5926Frederico de Castro Amaral6009Sao Paulo62410503***50300017BR.GOV.BCB.BRCODE01051.0.063041E1B",
+            "qr_code_base64_text": "MDAwMjAxMDEwMjEyMjY5MjAwMTRici5nb3YuYmNiLnBpeDI1NzBhcGktaC5kZXZlbG9wZXIuYnRncGFjdHVhbC5jb20vdjEvcS9kL2E3ZDgxNDFmYmE1YzQ5NWRiOWQ5ZTkzMGQ3ZmVmMDE3NTIwNDAwMDA1MzAzOTg2NTQwNzEwMTAuNTA1ODAyQlI1OTI2RnJlZGVyaWNvIGRlIENhc3RybyBBbWFyYWw2MDA5U2FvIFBhdWxvNjI0MTA1MDMqKio1MDMwMDAxN0JSLkdPVi5CQ0IuQlJDT0RFMDEwNTEuMC4wNjMwNDFFMUI=",
+            "qr_code_base64_image": "iVBORw0KGgoAAAANSUhEUgAAAPoAAAD6AQAAAACgl2eQAAAD4UlEQVR4Xu2YPY6kMBCFCzkggwtY4hrOfCW4AD8XaK7kzNew5AtA5gBR+wo2WFhpE3uD1bY10szgT2pcflX1qon/vBy9n7zWF7jXF7jXF7jXF7jXPwScRK2LK2uqeeG4GV0lIlsUsPwh3ZtjJD25UHnekzwsCRi1ej0KEOf6GA1VKTSlgY9RewKjB6c44R3KAyueIIyOKg4j/QUAkbS8WYSRV4eto/091JkAUWPi5/HzFkwmcP2lRysyWFME31+7BYGT1Gy704QBYqZQOV68HooC7AP0BjF/at0Y3gyfNfKoJHBaEcMODFdWh9ZD2HEpCxjqoWckfq0WhNSEHvdlSwKcUGG6s6YhHRWr1eHI+r6vUsBpaeBjECWrhRVeabRHWYBZtx5H450D5L14NaOaXRvFAB/3RA11yEdobyakp27LAlJYjp7U7rrVhwn3RQe0URBA4rBTO3eowy1SxoW+Vg/B5ANQWtKVo8F3nCRlVu4eiZMNQHITIzG7xVNTdxup0z4SJx84KaJntelAZxyg6nRM/FR1NsAeN4X0R/RwOjRHVP7jUYrzgXQ0FveFO0JPEaZ1eI2SwGniDmE7pCSyJkojrulXVecD7DVZ9KkwIJ4MbYseZlsSwGUhZfar2lceRqLbrl5cEGBGn+0W6BkFk8Odpw9V5wNJSe7AORDPdDQUevuq9vlA/NSok0pew0PVmkyYrp1SACKJCrk40fPqaRJhhKeHyQWYwxVJ3cNgpw6JP6OsXasUgDopkYTwDJQAg40jC1YU4LnG5yJ6NKXIHp0lPG1SPnD9K+mDLfhqeYen7HMBdnGmKHWmRjdBT0GR6fZ7pxBwkpahA+np1GwOkhamn4LJBdhDz7AowDr2oXXwKq8SlAtckYTRwiQYMA9uBvPgq7lnAziajbPp0OKRnrimlX+691IAfsmwCaPlcWV6rFEqw8sF5QKMj2ap9g43FXd0RlsYkNyEr5ZqfzRGbfIyvyVvHoBMqRBDlK8ErwWXgrarCgMcetIVy8jZ33qgZ27mAxjQahoxHTjYUXQr3bpXO8gGZICK17cWevI0IlVR1mxJAKpuMKC5+EHDTeJS4K6fHiYbkGp/VEk3Uie7DyE3n/NmNsBipAmeASGtXJBS825qBYDTHpP0LBQZCE+PL/+QDcg3GBY9NxDGNFTjGnkan9U+G5CqhTPCuosMNpk3nwYjH4DLtTIU9AbjMyoYvNbLFZcAjJLpgMRF9Bg865cmiwASyZ4gPGQQQtpd++UAuGgjRQwpiazZjEKjfMg+HxA9SH8fGKejIfH+9g+5wB/WF7jXF7jXF7jXF7jX/wL8AOPLuHyk8pHgAAAAAElFTkSuQmCC",
+            "qr_code_payload_url": "https://api-h.developer.btgpactual.com/v1/q/d/a7d8141fba5c495db9d9e930d7fef017",
+            "qr_code_id_document": "a7d8141f-ba5c-495d-b9d9-e930d7fef017",
+            "qr_code_uuid": "70a35206-a681-42db-9470-984a73470e65",
+            "updatedAt": "2020-11-16T04:01:07.998Z",
+            "createdAt": "2020-11-16T04:01:07.998Z"
+          }
+        }
+      }
+    ]
+
+##Group Config WebHook
+**Em desenvolvimento.** Para utilizar o WebHook é necessário que seja efetuado a criação de uma URL para recebimento.
+
+## Criar URL [/v5/api/pix/addUrl]
+**Em desenvolvimento.** Endpoint para criar URL para recebimento do WebHook.
+### Criar URL [POST]
+
+- Request (application/json)
+
+  + Headers
+    Accept: application/json
+    Authorization: Bearer {token}
+
+
+    - Body
+        {
+          "url_postback": "url"
+        }
+    
++ Parameters
+    - url_postback - Local para criação da URL de recebimento do WebHook.
+    
+    
+- Response 200
+    
+  - Body
+    {
+        "id": "1",
+        "url_postback": "url",
+        "updatedAt": "2020-11-16T04:01:07.998Z",
+        "createdAt": "2020-11-16T04:01:07.998Z"
+    }
+
+
+
+##Group WebHook
+
+
+### Transferência para pagadores
+
+**Em desenvolvimento.** WebHook de Transferência para pagadores.
+
+```json
+{
+  "origin": "PIX_TRANSFERS_PAYER",
+  "payload": {
+    "idAccount": 11,
+    "idEndToEnd": "58D5E212165B4CA0909BC86B9CEE0111",
+    "idTx": "DOCK202001030000000000001",
+    "transactionCode": "c2532089-f45a-4440-9e12-e5a8def771ac",
+    "transactionStatus": "EXECUTED",
+    "transactionType": "TRANSFER_DEBIT",
+    "transferType": 0,
+    "transactionDate": "2020-01-23T22:10:05.02Z",
+    "payee": {
+      "ispb": "11275560",
+      "nationalRegistration": "03967703045",
+      "bankAccountType": "CC",
+      "bankAccountNumber": "5784",
+      "bankBranchNumber": "2121"
+    },
+    "finalAmount": 1000.01,
+    "payerAnswer": "Campo de livre preenchimento"
+  }
+}
+```
+
+### Propriedades recebidas
+
+|Propriedade|Tipo   |Descrição                                                                               |
+|-----------|-------|----------------------------------------------------------------------------------------|
+|origin|string |Origem da transferência.                                                                |
+|payload|array  |Dados da transferência.                                                                 |
+|idAccount|int    |`ID` conta do recebedor.                                                                |
+|idEndToEnd|int    |Identificação ponta a ponta do pagamento associado a esta solicitação.                  |
+|idTx|int    |Identificador para reconciliação do receptor.                                           |
+|transactionCode|string |Código de transação de pagamento.                                                       |
+|transactionStatus      |string |Status da transação.                                                                    |
+|transactionType        |string |Tipo da transferência.                                                                  |
+|transactionDate        |string |Data da transação.                                                                      |
+|payee                  |array  |Informações do beneficiário.                                                            |
+|bankAccountType  |string |Tipo de conta bancária.                                                                 |
+|bankAccountNumber|string |Número de conta bancária do proprietário da chave DICT.                                 |
+|bankBranchNumber |string |Número da agência bancária do proprietário da chave DICT.                               |
+|finalAmount            |decimal|Valor total da operação de pagamento instantâneo, considerando desconto, juros e multas.|
+|payerAnswer            |string |Campo aberto da ZemoBank para inserir uma descrição do processo gerado pela chave DICT. |
+
+
+### Transferência para beneficiários
+
+**Em desenvolvimento.** WebHook de Transferência para beneficiários.
+
+```json
+{
+  "origin": "PIX_TRANSFERS_PAYEE",
+  "payload": {
+    "idAccount": 11,
+    "idEndToEnd": "58D5E212165B4CA0909BC86B9CEE0111",
+    "idTx": "DOCK202001030000000000001",
+    "transactionCode": "c2532089-f45a-4440-9e12-e5a8def771ac",
+    "transactionStatus": "EXECUTED",
+    "transactionType": "TRANSFER_CREDIT",
+    "transferType": 0,
+    "transactionDate": "2020-01-23T22:10:05.025Z",
+    "payer": {
+      "ispb": "11275560",
+      "nationalRegistration": "03967703045",
+      "bankAccountType": "CC",
+      "bankAccountNumber": "5784",
+      "bankBranchNumber": "2121"
+    },
+    "finalAmount": 1000.01,
+    "payerAnswer": "Campo de livre preenchimento"
+  }
+}
+```
+
+### Propriedades recebidas
+
+|Propriedade                    |Tipo   |Descrição|
+|-------------------------------|-------|---------|
+|origin                         |string |Origem da transferência.|
+|                      |array  |Dados da transferência.|
+|idAccount              |int    |`ID` conta do recebedor.|
+|idEndToEnd             |int    |Identificação ponta a ponta do pagamento associado a esta solicitação.|
+|idTx                   |int    |Identificador para reconciliação do receptor.|
+|transactionCode        |string |Código de transação de pagamento|
+|transactionStatus      |string |Status da transação.|
+|transactionType        |string |Tipo da transferência.|
+|transactionDate        |string |Data da transação.|
+|payee                  |array  |Informações do beneficiário.|
+|bankAccountType  |string |Tipo de conta bancária.|
+|bankAccountNumber|string |Número de conta bancária do proprietário da chave DICT.|
+|bankBranchNumber |string |Número da agência bancária do proprietário da chave DICT.|
+|finalAmount            |decimal|Valor total da operação de pagamento instantâneo, considerando desconto, juros e multas.|
+|payerAnswer            |string |Campo aberto da ZemoBank para inserir uma descrição do processo gerado pela chave DICT.|
